@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Hyundai GMB Insight Dashboard</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <style>
+    body {
+      background-color: #ffffff;
+      font-family: 'Segoe UI', sans-serif;
+    }
+    header, footer {
+      background-color: #002c5f;
+      color: white;
+    }
+    .glass-card {
+      background: rgba(0, 44, 95, 0.04);
+      border-radius: 1.5rem;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+      border: 1px solid rgba(0, 0, 0, 0.05);
+      transition: transform 0.4s ease, order 0.4s ease;
+      position: relative;
+    }
+    .glass-card:hover {
+      transform: scale(1.02);
+    }
+    .badge {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      background: rgba(0, 44, 95, 0.1);
+      color: #002c5f;
+      padding: 0.3rem 0.8rem;
+      border-radius: 9999px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      backdrop-filter: blur(6px);
+    }
+    .badge-left {
+      position: absolute;
+      top: 1rem;
+      left: 1rem;
+      background: rgba(0, 44, 95, 0.1);
+      color: #002c5f;
+      padding: 0.3rem 0.8rem;
+      border-radius: 9999px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      backdrop-filter: blur(6px);
+    }
+    .tooltip {
+      position: absolute;
+      top: -35px;
+      right: 10px;
+      background: #002c5f;
+      color: white;
+      padding: 4px 10px;
+      border-radius: 10px;
+      font-size: 12px;
+      white-space: nowrap;
+      display: none;
+    }
+    .glass-card:hover .tooltip {
+      display: block;
+    }
+  </style>
+</head>
+<body class="text-gray-800">
+  <header class="text-center py-5 shadow-lg">
+    <h1 class="text-3xl font-bold">🚗 Hyundai GMB Review Dashboard</h1>
+    <p class="text-sm mt-1">Real-time insights across all dealership branches</p>
+  </header>
+<br>
+<br>
+  <main id="dashboard" class="grid md:grid-cols-2 gap-6 px-4 pb-12 max-w-7xl mx-auto transition-all">
+    <div class="glass-card p-4" id="cardCBE">
+      <div class="badge" id="badgeCBE">Total: 0 Reviews</div>
+      <div class="badge-left">Top Star Rating : ⭐4.7/5</div>
+      <div class="tooltip" id="tipCBE">0%</div>
+      <h2 class="text-xl font-semibold mb-2 text-center"> 📍Lotus Hyundai CBE</h2>
+      <canvas id="lotusCbeChart" height="200"></canvas>
+      <div class="mt-4 bg-gray-100 p-3 rounded-lg shadow-inner text-sm text-center">
+        🏅 <span class="font-semibold">Ranking:</span> <span id="rankCBE">0</span><br />
+        📊 <span id="compareCBE">This is the main benchmark branch.</span>
+      </div>
+    </div>
+
+    <div class="glass-card p-4" id="cardErode">
+      <div class="badge" id="badgeErode">Total: 0 Reviews</div>
+      <div class="badge-left">Top Star Rating : ⭐4.7/5</div>
+      <div class="tooltip" id="tipErode">0%</div>
+      <h2 class="text-xl font-semibold mb-2 text-center"> 📍Lotus Hyundai Erode</h2>
+      <canvas id="lotusErodeChart" height="200"></canvas>
+      <div class="mt-4 bg-gray-100 p-3 rounded-lg shadow-inner text-sm text-center">
+        🏅 <span class="font-semibold">Ranking:</span> <span id="rankErode">0</span><br />
+        📊 <span id="compareErode"></span>
+      </div>
+    </div>
+
+    <div class="glass-card p-4" id="cardKovai">
+      <div class="badge" id="badgeKovai">Total: 0 Reviews</div>
+      <div class="badge-left">Top Star Rating : ⭐4.8/5</div>
+      <div class="tooltip" id="tipKovai">0%</div>
+      <h2 class="text-xl font-semibold mb-2 text-center"> 📍Kovai Hyundai</h2>
+      <canvas id="kovaiChart" height="200"></canvas>
+      <div class="mt-4 bg-gray-100 p-3 rounded-lg shadow-inner text-sm text-center">
+        🏅 <span class="font-semibold">Ranking:</span> <span id="rankKovai">0</span><br />
+        📊 <span id="compareKovai"></span>
+      </div>
+    </div>
+
+    <div class="glass-card p-4" id="cardChandra">
+      <div class="badge" id="badgeChandra">Total: 0 Reviews</div>
+      <div class="badge-left">Top Star Rating : ⭐4.6/5</div>
+      <div class="tooltip" id="tipChandra">0%</div>
+      <h2 class="text-xl font-semibold mb-2 text-center"> 📍Chandra Hyundai</h2>
+      <canvas id="chandraChart" height="200"></canvas>
+      <div class="mt-4 bg-gray-100 p-3 rounded-lg shadow-inner text-sm text-center">
+        🏅 <span class="font-semibold">Ranking:</span> <span id="rankChandra">0</span><br />
+        📊 <span id="compareChandra"></span>
+      </div>
+    </div>
+  </main>
+
+  <footer class="text-center py-4 text-sm">
+    © 2025 Hyundai Dealership Insight Dashboard · Built with ❤️ by Dharun
+  </footer>
+
+  <script>
+    const colorScale = val => val > 1000 ? "rgba(34,197,94,0.8)" : val > 100 ? "rgba(251,191,36,0.8)" : "rgba(239,68,68,0.8)";
+    const animateCount = (id, endVal) => {
+      let start = 0, step = Math.ceil(endVal / 30);
+      const counter = setInterval(() => {
+        start += step;
+        if (start >= endVal) {
+          start = endVal;
+          clearInterval(counter);
+        }
+        document.getElementById(id).textContent = `Total: ${start.toLocaleString()} Reviews`;
+      }, 30);
+    };
+
+    const renderCard = (chartId, badgeId, rankId, compareId, labels, data) => {
+      const ctx = document.getElementById(chartId).getContext("2d");
+      new Chart(ctx, {
+        type: "bar",
+        data: {
+          labels,
+          datasets: [{
+            label: "Reviews",
+            data,
+            backgroundColor: data.map(colorScale),
+            borderRadius: 10
+          }]
+        },
+        options: {
+          responsive: true,
+          plugins: { legend: { display: false } },
+          scales: { y: { beginAtZero: true } }
+        }
+      });
+
+      const total = data.reduce((a, b) => a + b, 0);
+      animateCount(badgeId, total);
+      return total;
+    };
+
+    const reviewCounts = {
+      CBE: renderCard("lotusCbeChart", "badgeCBE", "rankCBE", "compareCBE",
+        ["Mettupalayam", "Ganapathy", "Saravanampatti", "Stock Yard", "Used Car", "Service", "Annur"],
+        [930, 573, 237, 9, 8, 58, 68]),
+      Erode: renderCard("lotusErodeChart", "badgeErode", "rankErode", "compareErode",
+        ["Thindal", "Promise", "Service", "Body Shop", "Bhavani", "Gobi"],
+        [1390, 5, 28, 51, 24, 129]),
+      Kovai: renderCard("kovaiChart", "badgeKovai", "rankKovai", "compareKovai",
+        ["Singanallur", "Vadavalli", "Sulur"],
+        [4235, 79, 314]),
+      Chandra: renderCard("chandraChart", "badgeChandra", "rankChandra", "compareChandra",
+        ["Avinashi", "Koundampalayam", "Service", "Kovaipudur", "Promise", "Mettupalayam"],
+        [6045, 2381, 187, 103, 32, 407])
+    };
+
+    const benchmark = reviewCounts.CBE;
+    const sorted = Object.entries(reviewCounts).sort((a, b) => b[1] - a[1]);
+
+    sorted.forEach(([key, total], i) => {
+      const rank = i + 1;
+      document.getElementById("rank" + key).textContent = rank;
+      const diff = total - benchmark;
+      const pct = ((diff / benchmark) * 100).toFixed(1);
+      const compareText = key === "CBE"
+        ? "This is the main benchmark branch."
+        : `${diff > 0 ? "Ahead" : "Behind"} by ${Math.abs(diff)} reviews compared to Lotus Hyundai CBE (920)`;
+      const tooltip = key === "CBE" ? "Benchmark" : `${Math.abs(pct)}% ${diff > 0 ? "more" : "less"} than Lotus CBE`;
+
+      document.getElementById("compare" + key).textContent = compareText;
+      document.getElementById("tip" + key).textContent = tooltip;
+      document.getElementById("card" + key).style.order = rank;
+    });
+  </script>
+</body>
+</html>
