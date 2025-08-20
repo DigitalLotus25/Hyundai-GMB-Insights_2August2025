@@ -194,7 +194,7 @@
       const pct = ((diff / benchmark) * 100).toFixed(1);
       const compareText = key === "CBE"
         ? "This is the main benchmark branch."
-        : `${diff > 0 ? "Ahead" : "Behind"} by ${Math.abs(diff)} reviews compared to Lotus Hyundai CBE (920)`;
+        : `${diff > 0 ? "Ahead" : "Behind"} by ${Math.abs(diff)} reviews compared to Lotus Hyundai CBE (934)`;
       const tooltip = key === "CBE" ? "Benchmark" : `${Math.abs(pct)}% ${diff > 0 ? "more" : "less"} than Lotus CBE`;
 
       document.getElementById("compare" + key).textContent = compareText;
